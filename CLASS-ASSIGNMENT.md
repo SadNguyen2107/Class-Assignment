@@ -1,175 +1,145 @@
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
 
+# Class Assignment
 
-# CLASS ASSIGNMENT
-1. System architecture (propose mode)
-    * Draw the proposed system architecture (propose mode)
-    * Describe components in details
-    * Write steps of algorithm / propose model in codes or maths
-2. Development of AI model application
-    * Give problems based on the system architecture (given by 1) real world
-    * Develop an application real-world case study
-3.	Discuss the limitations and advantages of your AI project
+## 1. System Architecture (Proposed Model)
+- **Draw the proposed system architecture (propose mode)**
+- **Describe components in detail**
+- **Write steps of the algorithm/propose model in code or mathematics**
 
-## 1. System Architecture:
+## 2. Development of AI Model Application
+- **Identify problems based on the proposed system architecture**
+- **Develop a real-world case study application**
+
+---
+
+## Table of Contents
+1. [System Architecture (Proposed Model)](#system-architecture-proposed-model)  
+   - 1.1 [Proposed System Architecture Diagram](#proposed-system-architecture-diagram)  
+   - 1.2 [Detailed Component Descriptions](#detailed-component-descriptions)  
+   - 1.3 [Steps of Algorithm / Proposed Model](#steps-of-algorithm--proposed-model)  
+2. [Development of AI Model Application](#development-of-ai-model-application)  
+   - 2.1 [Problems Based on Proposed System Architecture](#problems-based-on-proposed-system-architecture)  
+   - 2.2 [Development of Real-World Case Study Application](#development-of-real-world-case-study-application)  
+3. [Discussion of Limitations and Advantages](#discussion-of-limitations-and-advantages)  
+
+---
+
+### 1.1 Proposed System Architecture Diagram
 ![System Workflow](./Images/workflow.jpg)
 
-1. Audio data
-   1. Audio File
-   2. Data in bytes
-   3. Encoding to 16bit, sample rate 16000
-2. MFCCs
-### **2. Steps to Compute MFCCs**
-
-1. **Pre-emphasis**:
-   - A pre-emphasis filter is applied to the audio signal to boost the energy of high frequencies. This compensates for the natural attenuation of high-frequency sounds during recording.
-   - Example filter: $y(t) = x(t) - \alpha \cdot x(t-1)$, where $\alpha$ is usually 0.95.
-
-2. **Framing**:
-   - The continuous audio signal is divided into overlapping short frames (e.g., 20-40 ms), since speech is quasi-stationary over short durations. A common overlap is 50%.
-   - Each frame is processed independently.
-
-3. **Windowing**:
-   - A window function (e.g., Hamming window) is applied to each frame to minimize spectral leakage. This ensures that signal discontinuities at frame boundaries don’t introduce artifacts.
-   - Example Hamming window: $w(n) = 0.54 - 0.46 \cdot \cos\left(\frac{2\pi n}{N-1}\right)$.
-
-4. **Fast Fourier Transform (FFT)**:
-   - The windowed frames are transformed into the frequency domain using the FFT to obtain the magnitude spectrum.
-
-5. **Mel Filter Bank**:
-   - The frequency domain signal is passed through a filter bank that consists of triangular filters spaced according to the mel scale.
-   - The mel scale relates perceived pitch to frequency using the formula:
-     $$
-     \text{mel}(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)
-     $$
-   - The filters emphasize frequencies important for human perception, discarding irrelevant high-frequency components.
-
-6. **Logarithm**:
-   - The output of the filter bank is converted to a logarithmic scale to mimic the logarithmic response of the human ear to sound intensity.
-
-7. **Discrete Cosine Transform (DCT)**:
-   - The log power spectrum is compressed by applying the DCT. This step decorrelates the features and concentrates energy into a few coefficients, reducing dimensionality.
-   - The result is a set of coefficients called the Mel Frequency Cepstral Coefficients.
-
-   ```python
-   def CalculateMFCC(audioSignal, sampleRate):
-        # Step 1: Pre-emphasis
-        # Apply pre-emphasis filter to boost higher frequencies
-        signal = audioSignal[n] - (alpha * audioSignal[n-1])
-        # typically alpha = 0.95
-
-        # Step 2: Framing
-        # Split signal into overlapping frames
-        frameLength = 25ms  # typical value
-        frameShift = 10ms   # typical value
-        frames = split_into_overlapping_frames(signal, frameLength, frameShift)
-
-        # Step 3: Windowing
-        # Apply Hamming window to each frame to reduce spectral leakage
-        For each frame:
-            frame = frame * hamming_window(frameLength)
-
-        # Step 4: FFT
-        # Compute Fast Fourier Transform for each frame
-        For each frame:
-            spectrum = FFT(frame)
-            powerSpectrum = |spectrum|^2
-
-        # Step 5: Mel Filter Bank
-        # Create triangular mel-scale filter bank
-        numFilters = 26  # typical value
-        melFilters = create_mel_filterbank(numFilters, sampleRate, fftSize)
-        
-        # Apply mel filterbank
-        For each frame:
-            melSpectrum = apply_filterbank(powerSpectrum, melFilters)
-
-        # Step 6: Log compression
-        # Take logarithm of mel spectrum
-        logMelSpectrum = log(melSpectrum)
-
-        # Step 7: DCT (Discrete Cosine Transform)
-        # Apply DCT to get cepstral coefficients
-        numCoefficients = 13  # typical value
-        mfcc = DCT(logMelSpectrum)[0:numCoefficients]
-
-        # Optional Step 8: Liftering
-        # Apply liftering to smooth coefficients
-        mfcc = lifter(mfcc)
-
-        Return mfcc
-
-    def create_mel_filterbank(numFilters, sampleRate, fftSize):
-        # Convert frequency range to mel scale
-        lowFreq = 0
-        highFreq = sampleRate/2
-        lowMel = hz_to_mel(lowFreq)
-        highMel = hz_to_mel(highFreq)
-        
-        # Create equally spaced points in mel scale
-        melPoints = linear_space(lowMel, highMel, numFilters + 2)
-        
-        # Convert back to Hz
-        freqPoints = mel_to_hz(melPoints)
-        
-        # Create triangular filters
-        For i from 1 to numFilters:
-            Create triangular filter centered at freqPoints[i]
-            with edges at freqPoints[i-1] and freqPoints[i+1]
-        
-        Return filters
-
-    def hz_to_mel(frequency):
-        Return 2595 * log10(1 + frequency/700)
-
-    def mel_to_hz(mel):
-        Return 700 * (10^(mel/2595) - 1)
-   ```
-8. Model
-   
-    LSTM + CNN:
-    ![LSTM + CNN ](./Images/lstm.png)
-
-
+### 1.2 Detailed Component Descriptions
+#### **Audio Data**
+1. **Audio File**: Captured input.
+2. **Data in Bytes**: Raw audio data.
+3. **Encoding**: Convert to 16-bit depth, sample rate of 16,000 Hz.
 
 ---
 
-### **1. Why MFCCs Are Useful**
-Speech signals are highly variable, influenced by the speaker, recording environment, and microphone. MFCCs help by capturing the most important features of speech while discarding unnecessary information like noise. They are derived from the mel scale, which mimics the way humans perceive sound, making them particularly suited for applications like speech recognition.
+#### **MFCC Computation**
+
+1. **Pre-Emphasis**: 
+   - Apply a filter to boost high frequencies. Compensates for natural attenuation during recording.
+   - Example Filter: $ y(t) = x(t) - \alpha \cdot x(t-1) $, where $ \alpha \approx 0.95 $.
+
+2. **Framing**: 
+   - Divide the audio signal into short overlapping frames (e.g., 20-40 ms).
+   - Common overlap: 50%.
+
+3. **Windowing**: 
+   - Apply a window function (e.g., Hamming window) to each frame to reduce spectral leakage.
+   - Example: $ w(n) = 0.54 - 0.46 \cdot \cos\left(\frac{2\pi n}{N-1}\right) $.
+
+4. **Fast Fourier Transform (FFT)**: 
+   - Transform each windowed frame into the frequency domain to obtain the magnitude spectrum.
+
+5. **Mel Filter Bank**: 
+   - Apply triangular filters based on the mel scale.
+   - Conversion formula: $ \text{mel}(f) = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right) $.
+
+6. **Logarithm**: 
+   - Convert the output of the filter bank to a logarithmic scale.
+
+7. **Discrete Cosine Transform (DCT)**: 
+   - Compress the log power spectrum to create Mel Frequency Cepstral Coefficients (MFCCs).
 
 ---
 
+### 1.3 Steps of Algorithm / Proposed Model
 
+```python
+# Steps to Compute MFCCs
+
+def calculate_mfcc(audio_signal, sample_rate):
+    # Step 1: Pre-emphasis
+    signal = audio_signal[n] - (alpha * audio_signal[n-1])  # alpha = 0.95
+
+    # Step 2: Framing
+    frame_length = 25ms
+    frame_shift = 10ms
+    frames = split_into_overlapping_frames(signal, frame_length, frame_shift)
+
+    # Step 3: Windowing
+    for frame in frames:
+        frame = frame * hamming_window(len(frame))
+
+    # Step 4: FFT
+    for frame in frames:
+        spectrum = FFT(frame)
+        power_spectrum = abs(spectrum) ** 2
+
+    # Step 5: Mel Filter Bank
+    mel_filters = create_mel_filterbank(num_filters=26, sample_rate=sample_rate, fft_size=len(frame))
+    mel_spectrum = [apply_filterbank(power_spectrum, mel_filters) for power_spectrum in frames]
+
+    # Step 6: Logarithm
+    log_mel_spectrum = [np.log(spectrum) for spectrum in mel_spectrum]
+
+    # Step 7: DCT
+    mfcc = [DCT(spectrum)[:13] for spectrum in log_mel_spectrum]
+
+    return mfcc
+```
 
 ---
 
-### **3. Interpretation of MFCCs**
-- The first coefficient, often called the **0th MFCC**, represents the average log energy of the signal (akin to loudness).
-- Higher-order coefficients capture finer spectral details. Typically, the first 12-13 coefficients are used for most applications, as they convey the majority of the speech signal's information.
+## 2. Development of AI Model Application
 
-
-
-
--- part 2: real life problem
----
-
-### **5. Applications**
+### 2.1 Problems Based on Proposed System Architecture
 - **Speech Recognition**: Recognizing spoken words or phrases.
 - **Speaker Recognition**: Identifying or verifying a speaker's identity.
 - **Music Analysis**: Classifying genres or detecting beats.
-- **Environmental Sound Recognition**: Identifying ambient sounds like alarms or nature sounds.
+- **Environmental Sound Recognition**: Identifying ambient sounds (e.g., alarms or nature sounds).
 
-
-- Idea of an application:
--  
-
--- part 3: advantages, limitation
 ---
 
-6. Limitations
-Not Robust to Noise: MFCCs can be sensitive to background noise, requiring preprocessing like noise reduction.
-Assumes Stationarity: MFCCs work well for quasi-stationary segments but might struggle with rapidly changing signals.
+### 2.2 Development of Real-World Case Study Application
+- **Application Idea**: Use MFCCs in an IoT project to predict bee health.
 
-4. Advantages of MFCCs
-Perceptual Basis: The mel scale aligns with human auditory perception.
-Compact Representation: MFCCs distill complex spectral information into a small set of coefficients.
-Effective for Speech Analysis: They emphasize features relevant to speech and de-emphasize irrelevant details like noise.
+---
+
+## 3. Discussion of Limitations and Advantages
+
+### 3.1 Limitations
+- **Sensitivity to Noise**: MFCCs require preprocessing (e.g., noise reduction) as they are not robust to background noise.
+- **Assumes Stationarity**: Struggles with rapidly changing signals.
+
+### 3.2 Advantages
+- **Perceptual Basis**: The mel scale aligns with human auditory perception.
+- **Compact Representation**: Reduces complex spectral information into a small set of coefficients.
+- **Effective for Speech Analysis**: Emphasizes features relevant to speech and de-emphasizes irrelevant details like noise.
+
+---
+
+## Additional: Model Comparison (CNN vs. LSTM + CNN)
+
+### Main Model: CNN
+![CNN Model](./Images/CNN.png)
+
+### LSTM + CNN Model
+![LSTM + CNN](./Images/lstm.png)
+
+**Comparison**:
+- Evaluate in terms of accuracy and processing speed.

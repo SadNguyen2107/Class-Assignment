@@ -23,7 +23,8 @@
 2. [Development of AI Model Application](#development-of-ai-model-application)  
    - 2.1 [Problems Based on Proposed System Architecture](#problems-based-on-proposed-system-architecture)  
    - 2.2 [Development of Real-World Case Study Application](#development-of-real-world-case-study-application)  
-3. [Discussion of Limitations and Advantages](#discussion-of-limitations-and-advantages)  
+3. [Discussion of Limitations and Advantages](#discussion-of-limitations-and-advantages)
+4. [Additional: Model Comparison (CNN vs. LSTM + CNN)](#additional-model-comparison-cnn-vs-lstm--cnn) 
 
 ---
 
